@@ -15,12 +15,16 @@
                 <v-img src="../assets/utsv-logo.png"></v-img>
               </v-avatar>
             </v-col>
+            <v-col cols="12" v-if="error != ''">
+              <v-alert outlined type="error" text dense>{{ error }}</v-alert>
+            </v-col>
           </v-row>
 
           <v-form class="pa-5">
             <v-text-field
               outlined
               dense
+              v-model="user.mail"
               color="green"
               label="Usuario"
               placeholder="Ingresa tu usuario"
@@ -29,14 +33,27 @@
             <v-text-field
               outlined
               dense
+              v-model="user.password"
               color="green"
               label="Contraseña"
               type="password"
               placeholder="Ingresa tu contraseña"
               required
             ></v-text-field>
-            <v-btn block color="green" dark depressed>Ingresar</v-btn>
-            <span class="d-flex justify-end text-subtitle-2 blue--text mt-2">Crear cuenta</span>
+            <v-btn
+            class="mb-0"
+              block
+              color="green"
+              dark
+              depressed
+              :loading="loading"
+              @click="iniciarSesion"
+            >Ingresar</v-btn>
+            <v-row>
+              <v-col cols="12" class="d-flex justify-end pt-2">
+                <router-link to="/registro" class="enlace blue--text text-subtitle-2">Crear cuenta</router-link>
+              </v-col>
+            </v-row>
           </v-form>
         </v-card>
       </v-col>
@@ -45,8 +62,71 @@
 </template>
 
 <script>
+import { db, auth } from "../services/firebase";
+
 export default {
   name: "Home",
-  components: {},
+  data: () => ({
+    loading: false,
+    user: {
+      mail: "admin@admin.com",
+      password: "123456",
+    },
+    error: "",
+    userData: "",
+  }),
+  methods: {
+    async iniciarSesion() {
+      this.loading = true;
+      try {
+        this.userData = await this.getUser();
+        console.log(this.userData);
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getUser() {
+      try {
+        const response = await auth.signInWithEmailAndPassword(
+          this.user.mail,
+          this.user.password
+        );
+        let user = await this.getDataUser(response.user.uid);
+        return user;
+      } catch (error) {
+        this.error = error.message;
+
+        setTimeout(() => {
+          this.error = "";
+        }, 5000);
+      }
+    },
+    async getDataUser(uid) {
+      try {
+        const response = await db
+          .collection("users")
+          .where("uid", "==", uid)
+          .get();
+
+        return response.docs[0].data();
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+  },
 };
 </script>
+
+<style lang="css">
+
+.enlace {
+  text-decoration: none;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
+
+</style>
