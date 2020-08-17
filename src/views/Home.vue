@@ -70,8 +70,8 @@ export default {
   data: () => ({
     loading: false,
     user: {
-      mail: "admin@admin.com",
-      password: "123456",
+      mail: "",
+      password: "",
     },
     error: "",
     userData: "",
@@ -84,6 +84,7 @@ export default {
         this.userData = await this.getUser();
         this.setUser(this.userData);
         if (this.userData.rol == "admin") this.$router.push("/admin");
+        if (this.userData.rol == "Estudiante") this.$router.push("/student");
       } catch (error) {
         console.warn(error);
       } finally {
