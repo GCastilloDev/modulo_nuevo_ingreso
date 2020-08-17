@@ -5,13 +5,14 @@ import "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAza0ffb0QjYofr5ZjEnzz-YdSld6mS0-0",
-  authDomain: "utsv-nuevo-ingreso.firebaseapp.com",
-  databaseURL: "https://utsv-nuevo-ingreso.firebaseio.com",
-  projectId: "utsv-nuevo-ingreso",
-  storageBucket: "utsv-nuevo-ingreso.appspot.com",
-  messagingSenderId: "1085650154682",
-  appId: "1:1085650154682:web:8ded53b4c1c0f46341be83"
+  apiKey: "AIzaSyB2w8SwTxQmbRnoH8U2tif-F9ljDaD56vo",
+  authDomain: "moduloni.firebaseapp.com",
+  databaseURL: "https://moduloni.firebaseio.com",
+  projectId: "moduloni",
+  storageBucket: "moduloni.appspot.com",
+  messagingSenderId: "302502608767",
+  appId: "1:302502608767:web:0cb096cccd253b8a15a44a",
+  measurementId: "G-R1K6HZWG1Q"
 };
 
 // Initialize Firebase
