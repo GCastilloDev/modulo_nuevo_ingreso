@@ -1,19 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    error: ""
+    user: "",
+    careerSelected: ""
   },
   mutations: {
-    setError(state, payload) {
-      state.error = payload;
+    setUser(state, payload) {
+      state.user = payload;
+    },
+    setCareerSelected(state, payload) {
+      state.careerSelected = payload;
     }
   },
-  actions: {
-  },
+  actions: {},
   modules: {}
 });

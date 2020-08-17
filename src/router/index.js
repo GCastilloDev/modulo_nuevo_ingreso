@@ -1,7 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Vuex from "../store/index";
 
 Vue.use(VueRouter);
+
+const ifAuthenticated = (to, from, next) => {
+  if (Vuex.state.user != "") {
+    next();
+  } else {
+    next("/");
+  }
+};
 
 const routes = [
   {
@@ -14,6 +23,20 @@ const routes = [
     name: "Registro",
     component: () =>
       import(/* webpackChunkName: "registro" */ "../views/Registro.vue")
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: () =>
+      import(/* webpackChunkName: "admin" */ "../views/Admin.vue"),
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: "/admin/detail-career",
+    name: "DetailCareer",
+    component: () =>
+      import(/* webpackChunkName: "admin" */ "../views/DetailCareer.vue"),
+    beforeEnter: ifAuthenticated
   }
 ];
 

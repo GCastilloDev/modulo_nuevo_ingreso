@@ -503,36 +503,43 @@ export default {
       contrasena: "",
       documents: {
         actaNacimiento: {
+          name: "Acta de nacimiento",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         curp: {
+          name: "CURP",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         comprobanteDomicilio: {
+          name: "Comprobante de domicilio",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         certificadoPreparatoria: {
+          name: "Certificado de preparatoria",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         credencialElector: {
+          name: "Credencial de elector",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         fotografia: {
+          name: "Fotografia",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",
         },
         analisisVDRL: {
+          name: "Analisis VDRL",
           url: "",
           aprobado: false,
           mensaje: "No ha sido revisado",

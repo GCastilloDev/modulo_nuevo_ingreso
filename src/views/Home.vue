@@ -41,7 +41,7 @@
               required
             ></v-text-field>
             <v-btn
-            class="mb-0"
+              class="mb-0"
               block
               color="green"
               dark
@@ -63,6 +63,7 @@
 
 <script>
 import { db, auth } from "../services/firebase";
+import { mapMutations } from "vuex";
 
 export default {
   name: "Home",
@@ -76,11 +77,13 @@ export default {
     userData: "",
   }),
   methods: {
+    ...mapMutations(["setUser"]),
     async iniciarSesion() {
       this.loading = true;
       try {
         this.userData = await this.getUser();
-        console.log(this.userData);
+        this.setUser(this.userData);
+        if (this.userData.rol == "admin") this.$router.push("/admin");
       } catch (error) {
         console.warn(error);
       } finally {
@@ -105,12 +108,8 @@ export default {
     },
     async getDataUser(uid) {
       try {
-        const response = await db
-          .collection("users")
-          .where("uid", "==", uid)
-          .get();
-
-        return response.docs[0].data();
+        const response = await db.collection("users").doc(uid).get();
+        return response.data();
       } catch (error) {
         console.warn(error);
       }
@@ -120,7 +119,6 @@ export default {
 </script>
 
 <style lang="css">
-
 .enlace {
   text-decoration: none;
 }
@@ -128,5 +126,4 @@ export default {
 .enlace:hover {
   text-decoration: underline;
 }
-
 </style>
