@@ -3,42 +3,45 @@
     <v-card>
       <v-toolbar dense flat color="green" dark>
         <v-toolbar-title>Documentos</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn color="white" text @click="cerrar">Cerrar</v-btn>
+        <v-btn color="white" text @click="guardar">Guardar cambios</v-btn>
       </v-toolbar>
       <v-container>
-        <pre>{{documents}}</pre>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12" v-for="item in item.documents" :key="item.name">
             <v-card>
-              <v-card-title>Analisis VDRL</v-card-title>
+              <v-card-title>{{item.name}}</v-card-title>
               <v-card-text>
-                <v-btn
-                  block
-                  depressed
-                  color="green"
-                  dark
-                  @click="abrir(item.documents.analisisVDRL.url)"
-                >Ver documento</v-btn>
+                <v-btn block depressed color="green" dark @click="abrir(item.url)">Ver documento</v-btn>
               </v-card-text>
-              <v-card-text class="mb-0 pb-0">Aprobado: {{item.documents.analisisVDRL.aprobado}}</v-card-text>
-              <v-card-text class="mb-0 mt-0 pb-5 pt-0">Mensaje: {{item.documents.analisisVDRL.mensaje}}</v-card-text>
+              <v-card-text class="mb-0 pb-0">
+                Aprobado:
+                <strong>{{item.aprobado}}</strong>
+              </v-card-text>
+              <v-card-text class="mb-0 mt-0 pb-5 pt-0">
+                Mensaje:
+                <strong>{{item.mensaje}}</strong>
+              </v-card-text>
               <v-card-actions>
-                  <v-btn block depressed color="green">Editar</v-btn>
+                <v-btn block depressed color="green" dark @click="editar(item)">Editar</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
       </v-container>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="green darken-1" text @click="cerrar">Cerrar</v-btn>
-      </v-card-actions>
     </v-card>
+    <edit :viewDocumentEdit="viewDocumentEdit" :item="itemData" @cerrar="viewDocumentEdit = false" />
   </v-dialog>
 </template>
 
 <script>
+import { db } from "../services/firebase";
 export default {
   name: "AddressComponent",
+  components: {
+    edit: () => import("./DocumentEdit"),
+  },
   props: {
     viewDocuments: {
       type: Boolean,
@@ -49,12 +52,30 @@ export default {
       required: true,
     },
   },
+  data: () => ({
+    viewDocumentEdit: false,
+    itemData: {},
+  }),
   methods: {
     cerrar() {
       this.$emit("cerrar");
     },
     abrir(url) {
       window.open(url, "_blank");
+    },
+    editar(item) {
+      this.itemData = item;
+      this.viewDocumentEdit = true;
+    },
+    async guardar() {
+      let uid = this.item.uid;
+
+      try {
+        const response = await db.collection("users").doc(uid).set(this.item);
+        if(response == undefined) this.$emit("guardado");
+      } catch (error) {
+        console.warn(error);
+      }
     },
   },
 };

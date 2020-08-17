@@ -13,17 +13,15 @@
               color="green"
               dark
               @click="verDireccion(item.direccion)"
-            >Ver dirección</v-btn>
+            >dirección</v-btn>
           </template>
 
           <template v-slot:item.documents="{ item }">
-            <v-btn
-              small
-              depressed
-              color="green"
-              dark
-              @click="verDocumentos(item)"
-            >Ver documentos</v-btn>
+            <v-btn small depressed color="green" dark @click="verDocumentos(item)">documentos</v-btn>
+          </template>
+
+          <template v-slot:item.detalleCompleto="{ item }">
+            <v-btn small depressed color="green" dark @click="verUsuario(item)">detalle</v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -31,8 +29,16 @@
     <addressModal :viewAddress="viewAddress" :address="addressData" @cerrar="viewAddress = false" />
     <documentsModal
       :viewDocuments="viewDocuments"
-      :items="documents"
+      :item="item"
       @cerrar="viewDocuments = false"
+      @guardado="guardado"
+    />
+
+    <userModal
+      v-if="viewDetailUser"
+      :viewDetailUser="viewDetailUser"
+      :user="user"
+      @cerrar="viewDetailUser = false"
     />
   </v-container>
 </template>
@@ -49,14 +55,18 @@ export default {
   components: {
     addressModal: () => import("../components/Address"),
     documentsModal: () => import("../components/Documents"),
+    userModal: () => import("../components/DetailUser"),
   },
   data: () => ({
     viewAddress: false,
     viewDocuments: false,
+    viewDetailUser: false,
     loading: false,
     addressData: {},
     documents: {},
     items: [],
+    item: {},
+    user: {},
     headers: [
       {
         text: "Nombre",
@@ -93,13 +103,22 @@ export default {
     ],
   }),
   methods: {
+    async guardado() {
+      this.items = [];
+      await this.getData();
+      this.viewDocuments = false;
+    },
     verDireccion(direccion) {
       this.addressData = direccion;
       this.viewAddress = true;
     },
-    verDocumentos(documentos) {
-      this.documents = documentos;
+    verDocumentos(item) {
+      this.item = item;
       this.viewDocuments = true;
+    },
+    verUsuario(item) {
+      this.user = item;
+      this.viewDetailUser = true;
     },
     async getData() {
       this.loading = true;
